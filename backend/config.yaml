@@ -1,0 +1,11 @@
+app:
+  addr: 0.0.0.0:8000
+  env: dev
+postgres:
+  host: localhost
+  port: 5432
+  user: postgres
+  password: 1234
+  dbName: ai_hr
+llm:
+  token: sk-25f5f4...
