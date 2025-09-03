@@ -8,11 +8,13 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/matveevfg/AI-HR/backend/api"
-	aiHr "github.com/matveevfg/AI-HR/backend/service/ai-hr"
-	"github.com/matveevfg/AI-HR/backend/storage/postgres"
 	"github.com/rs/zerolog/log"
 	"gopkg.in/yaml.v3"
+
+	"github.com/matveevfg/AI-HR/backend/api"
+	"github.com/matveevfg/AI-HR/backend/pkg/deepseek"
+	aiHr "github.com/matveevfg/AI-HR/backend/service/ai-hr"
+	"github.com/matveevfg/AI-HR/backend/storage/postgres"
 )
 
 func main() {
@@ -42,7 +44,12 @@ func main() {
 		logger.Fatal().Err(err).Msg("failed to migrate postgres")
 	}
 
-	mainService := aiHr.New(storage)
+	llmService, err := deepseek.New(storage, conf.LLM.Token)
+	if err != nil {
+		logger.Fatal().Err(err).Msg("failed to init llm")
+	}
+
+	mainService := aiHr.New(storage, llmService)
 
 	server := api.New(mainService)
 
@@ -103,4 +110,7 @@ type config struct {
 		Password string `yaml:"password"`
 		DBName   string `yaml:"dbName"`
 	} `yaml:"postgres"`
+	LLM struct {
+		Token string `yaml:"token"`
+	} `yaml:"llm"`
 }

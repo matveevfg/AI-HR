@@ -7,3 +7,5 @@ postgres:
   user: postgres
   password: 1234
   dbName: ai_hr
+llm:
+  token: sk-25f5f4...

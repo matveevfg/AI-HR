@@ -1,11 +1,13 @@
 package aiHr
 
 type Service struct {
-	storage storage
+	storage   storage
+	llmClient llmClient
 }
 
-func New(storage storage) *Service {
+func New(storage storage, llmClient llmClient) *Service {
 	return &Service{
-		storage: storage,
+		storage:   storage,
+		llmClient: llmClient,
 	}
 }

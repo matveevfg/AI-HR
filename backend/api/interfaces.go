@@ -2,8 +2,10 @@ package api
 
 import (
 	"context"
+	"mime/multipart"
 
 	"github.com/google/uuid"
+
 	"github.com/matveevfg/AI-HR/backend/api/requests"
 	"github.com/matveevfg/AI-HR/backend/models"
 )
@@ -15,4 +17,6 @@ type AiHrService interface {
 	DeleteVacancy(ctx context.Context, id uuid.UUID) error
 	SetVacancyInactive(ctx context.Context, id uuid.UUID) error
 	SetVacancyActive(ctx context.Context, id uuid.UUID) error
+
+	SaveResume(ctx context.Context, file *multipart.FileHeader) error
 }

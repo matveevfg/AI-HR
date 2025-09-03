@@ -3,9 +3,13 @@ module github.com/matveevfg/AI-HR/backend
 go 1.24.6
 
 require (
+	github.com/go-deepseek/deepseek v0.8.0
 	github.com/google/uuid v1.6.0
 	github.com/labstack/echo/v4 v4.13.4
+	github.com/lu4p/cat v0.1.5
+	github.com/nguyenthenguyen/docx v0.0.0-20230621112118-9c8e795a11db
 	github.com/rs/zerolog v1.34.0
+	github.com/sashabaranov/go-openai v1.41.1
 	github.com/uptrace/bun v1.2.15
 	github.com/uptrace/bun/dialect/pgdialect v1.2.15
 	github.com/uptrace/bun/driver/pgdriver v1.2.15
@@ -14,7 +18,9 @@ require (
 )
 
 require (
+	github.com/EndFirstCorp/peekingReader v0.0.0-20171012052444-257fb6f1a1a6 // indirect
 	github.com/fatih/color v1.18.0 // indirect
+	github.com/gabriel-vasile/mimetype v1.1.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect

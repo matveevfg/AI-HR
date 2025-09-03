@@ -45,6 +45,9 @@ func (s *Server) setupRoutes() {
 	vacancies.DELETE("/:id", s.DeleteVacancy)
 	vacancies.PUT("/:id/active", s.SetVacancyActive)
 	vacancies.PUT("/:id/inactive", s.SetVacancyInactive)
+
+	resumes := api.Group("/resumes")
+	resumes.POST("", s.UploadResume)
 }
 
 func (s *Server) Start(addr string) error {

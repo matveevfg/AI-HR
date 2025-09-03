@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+
 	"github.com/matveevfg/AI-HR/backend/api/requests"
 	"github.com/matveevfg/AI-HR/backend/models"
 )
@@ -15,4 +16,15 @@ type storage interface {
 	DeleteVacancy(ctx context.Context, id uuid.UUID) error
 	SetVacancyInactive(ctx context.Context, id uuid.UUID) error
 	SetVacancyActive(ctx context.Context, id uuid.UUID) error
+
+	SaveResume(ctx context.Context, resume *models.Resume) error
+	SaveWorkPlaces(ctx context.Context, workPlaces []*models.WorkPlace) error
+
+	CtxWithTx(ctx context.Context) (context.Context, error)
+	TxCommit(ctx context.Context) error
+	TxRollback(ctx context.Context) error
+}
+
+type llmClient interface {
+	ResumeToJSON(ctx context.Context, resumeText string) (*models.Resume, error)
 }
