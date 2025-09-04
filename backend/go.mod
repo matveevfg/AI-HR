@@ -5,9 +5,9 @@ go 1.24.6
 require (
 	github.com/go-deepseek/deepseek v0.8.0
 	github.com/google/uuid v1.6.0
+	github.com/gorilla/websocket v1.5.3
 	github.com/labstack/echo/v4 v4.13.4
 	github.com/lu4p/cat v0.1.5
-	github.com/nguyenthenguyen/docx v0.0.0-20230621112118-9c8e795a11db
 	github.com/rs/zerolog v1.34.0
 	github.com/sashabaranov/go-openai v1.41.1
 	github.com/uptrace/bun v1.2.15

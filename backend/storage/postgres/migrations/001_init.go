@@ -10,7 +10,7 @@ func init() {
 	MigrationSet.MustRegister(
 		func(ctx context.Context, db *bun.DB) error {
 			_, err := db.ExecContext(ctx, `
-				CREATE TABLE IF NOT EXISTS product_categories (
+				CREATE TABLE IF NOT EXISTS vacancies (
 					id UUID PRIMARY KEY,
 					status VARCHAR(255) NOT NULL,
 					name VARCHAR(255) NOT NULL,
@@ -18,6 +18,7 @@ func init() {
 					city VARCHAR(255) NOT NULL,
 					address TEXT NOT NULL,
 					work_type VARCHAR(255) NOT NULL,
+					contract_type VARCHAR(255) NOT NULL,
 					employment_type VARCHAR(255) NOT NULL,
 					work_schedule VARCHAR(255) NOT NULL,
 					income INTEGER NULL,

@@ -47,7 +47,11 @@ func (s *Server) setupRoutes() {
 	vacancies.PUT("/:id/inactive", s.SetVacancyInactive)
 
 	resumes := api.Group("/resumes")
-	resumes.POST("", s.UploadResume)
+	resumes.POST("/:vacancy-id", s.UploadResumes)
+	resumes.GET("/:vacancy-id", s.Resumes)
+
+	dialogs := api.Group("/dialogs")
+	dialogs.GET("/ws", s.handleWebSocket)
 }
 
 func (s *Server) Start(addr string) error {

@@ -4,6 +4,8 @@ import "github.com/google/uuid"
 
 type Resume struct {
 	ID                       uuid.UUID `json:"id" bun:"id,pk"`
+	VacancyID                uuid.UUID `json:"vacancy_id" bun:"vacancy_id"`
+	Vacancy                  *Vacancy  `json:"vacancy" bun:"rel:has-one,join:vacancy_id=id"`
 	Location                 string    `json:"location"`
 	Citizenship              string    `json:"citizenship"`
 	RelocationWillingness    string    `json:"relocation_willingness"`

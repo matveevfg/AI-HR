@@ -2,7 +2,10 @@ package postgres
 
 import (
 	"context"
+	"database/sql"
 	"errors"
+
+	"github.com/google/uuid"
 
 	"github.com/matveevfg/AI-HR/backend/models"
 )
@@ -33,4 +36,18 @@ func (p *Postgres) SaveWorkPlaces(ctx context.Context, workPlaces []*models.Work
 	}
 
 	return nil
+}
+
+func (p *Postgres) Resumes(ctx context.Context, vacancyID uuid.UUID) ([]*models.Resume, error) {
+	var resumes []*models.Resume
+
+	if err := p.d.NewSelect().Model(&resumes).Where("vacancy_id = ?", vacancyID).Scan(ctx); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return resumes, nil
+		}
+
+		return nil, err
+	}
+
+	return resumes, nil
 }

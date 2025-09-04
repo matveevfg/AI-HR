@@ -12,6 +12,7 @@ func init() {
 			_, err := db.ExecContext(ctx, `
 				CREATE TABLE IF NOT EXISTS resumes (
 					id UUID PRIMARY KEY,
+					vacancy_id UUID REFERENCES vacancies(id) ,
 					location TEXT,
 					citizenship TEXT,
 					relocation_willingness TEXT,

@@ -18,5 +18,6 @@ type AiHrService interface {
 	SetVacancyInactive(ctx context.Context, id uuid.UUID) error
 	SetVacancyActive(ctx context.Context, id uuid.UUID) error
 
-	SaveResume(ctx context.Context, file *multipart.FileHeader) error
+	SaveResume(ctx context.Context, file []*multipart.FileHeader, vacancyID uuid.UUID) error
+	Resumes(ctx context.Context, vacancyID uuid.UUID) ([]*models.Resume, error)
 }

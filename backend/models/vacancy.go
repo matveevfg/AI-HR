@@ -11,7 +11,8 @@ type Vacancy struct {
 	Region                string    `json:"region"`
 	City                  string    `json:"city"`
 	Address               string    `json:"address"`
-	ContractType          string    `json:"work_type"`
+	WorkType              string    `json:"work_type"`
+	ContractType          string    `json:"contract_type"`
 	EmploymentType        string    `json:"employment_type"`
 	WorkSchedule          string    `json:"work_schedule"`
 	Income                *int      `json:"income,omitempty"`

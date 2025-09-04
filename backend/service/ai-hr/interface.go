@@ -19,6 +19,7 @@ type storage interface {
 
 	SaveResume(ctx context.Context, resume *models.Resume) error
 	SaveWorkPlaces(ctx context.Context, workPlaces []*models.WorkPlace) error
+	Resumes(ctx context.Context, vacancyID uuid.UUID) ([]*models.Resume, error)
 
 	CtxWithTx(ctx context.Context) (context.Context, error)
 	TxCommit(ctx context.Context) error
