@@ -1,12 +1,10 @@
-import { Typography, Box } from '@mui/material';
+import { Box } from '@mui/material';
+import VacancyList from '../../components/vacancy-list';
 
 const VacanciesPage = () => {
   return (
     <Box>
-      <Typography variant='h4' gutterBottom>
-        Вакансии
-      </Typography>
-      <Typography>Здесь будет список вакансий...</Typography>
+      <VacancyList />
     </Box>
   );
 };
