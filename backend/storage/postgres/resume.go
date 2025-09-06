@@ -30,7 +30,7 @@ func (p *Postgres) SaveWorkPlaces(ctx context.Context, workPlaces []*models.Work
 		return errors.New("could not get tx from context")
 	}
 
-	_, err := tx.NewInsert().Model(workPlaces).ExcludeColumn("id").Ignore().Exec(ctx)
+	_, err := tx.NewInsert().Model(&workPlaces).ExcludeColumn("id").Ignore().Exec(ctx)
 	if err != nil {
 		return err
 	}

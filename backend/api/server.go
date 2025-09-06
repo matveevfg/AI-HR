@@ -41,7 +41,6 @@ func (s *Server) setupRoutes() {
 	vacancies.GET("", s.Vacancies)
 	vacancies.GET("/:id", s.Vacancy)
 	vacancies.POST("", s.SaveVacancy)
-	vacancies.PUT("/:id", s.UpdateVacancy)
 	vacancies.DELETE("/:id", s.DeleteVacancy)
 	vacancies.PUT("/:id/active", s.SetVacancyActive)
 	vacancies.PUT("/:id/inactive", s.SetVacancyInactive)

@@ -37,31 +37,19 @@ func (s *Server) Vacancies(c echo.Context) error {
 }
 
 func (s *Server) SaveVacancy(c echo.Context) error {
-	var vacancyRequest requests.Vacancy
-	if err := c.Bind(&vacancyRequest); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "invalid JSON body")
+	form, err := c.MultipartForm()
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	id, err := s.service.SaveVacancy(c.Request().Context(), vacancyRequest.ToModel())
+	files := form.File["vacancies"]
+
+	err = s.service.SaveVacancy(c.Request().Context(), files)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusCreated, id)
-}
-
-func (s *Server) UpdateVacancy(c echo.Context) error {
-	var vacancyRequest requests.Vacancy
-	if err := c.Bind(&vacancyRequest); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "invalid JSON body")
-	}
-
-	id, err := s.service.SaveVacancy(c.Request().Context(), vacancyRequest.ToModel())
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-
-	return c.JSON(http.StatusCreated, id)
+	return c.NoContent(http.StatusCreated)
 }
 
 func (s *Server) DeleteVacancy(c echo.Context) error {

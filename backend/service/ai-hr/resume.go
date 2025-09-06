@@ -2,7 +2,6 @@ package aiHr
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -11,9 +10,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/fumiama/go-docx"
 	"github.com/google/uuid"
-	"github.com/lu4p/cat"
-
 	"github.com/matveevfg/AI-HR/backend/models"
 )
 
@@ -28,10 +26,6 @@ func (s *Service) SaveResume(ctx context.Context, files []*multipart.FileHeader,
 	}()
 
 	for _, file := range files {
-		if !strings.HasSuffix(strings.ToLower(file.Filename), ".rtf") {
-			return errors.New("resume field must end with .rtf")
-		}
-
 		src, err := file.Open()
 		if err != nil {
 			return err
@@ -51,11 +45,17 @@ func (s *Service) SaveResume(ctx context.Context, files []*multipart.FileHeader,
 			return err
 		}
 
-		if err := convertRTFToDOCX(tmp.Name(), "/tmp/out.docx"); err != nil {
-			return err
-		}
+		name := tmp.Name()
 
-		text, err := extractTextFromDocx("/tmp/out.docx")
+		//if strings.HasSuffix(file.Filename, "rtf") {
+		//	if err := convertRTFToDOCX(tmp.Name(), "/tmp/out.docx"); err != nil {
+		//		return err
+		//	}
+		//
+		//	name = "/tmp/out.docx"
+		//}
+
+		text, err := extractTextFromDocx(name)
 		if err != nil {
 			return err
 		}
@@ -68,11 +68,15 @@ func (s *Service) SaveResume(ctx context.Context, files []*multipart.FileHeader,
 		resume.ID = uuid.New()
 		resume.VacancyID = vacancyID
 
-		if err := s.storage.SaveWorkPlaces(ctx, resume.WorkPlaces); err != nil {
+		if err := s.storage.SaveResume(ctx, resume); err != nil {
 			return err
 		}
 
-		if err := s.storage.SaveResume(ctx, resume); err != nil {
+		for _, wp := range resume.WorkPlaces {
+			wp.ResumeID = resume.ID
+		}
+
+		if err := s.storage.SaveWorkPlaces(ctx, resume.WorkPlaces); err != nil {
 			return err
 		}
 
@@ -80,12 +84,20 @@ func (s *Service) SaveResume(ctx context.Context, files []*multipart.FileHeader,
 			return err
 		}
 
-		if err := os.Remove(tmp.Name()); err != nil {
+		name = tmp.Name()
+
+		if err := tmp.Close(); err != nil {
 			return err
 		}
 
-		if err := os.Remove("/tmp/out.docx"); err != nil {
+		if err := os.Remove(name); err != nil {
 			return err
+		}
+
+		if strings.HasSuffix(file.Filename, "rtf") {
+			if err := os.Remove("/tmp/out.docx"); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -97,16 +109,39 @@ func (s *Service) SaveResume(ctx context.Context, files []*multipart.FileHeader,
 }
 
 func extractTextFromDocx(filePath string) (string, error) {
-	txt, err := cat.File(filePath)
+	readFile, err := os.Open(filePath)
 	if err != nil {
 		return "", err
 	}
 
-	return txt, nil
+	fileInfo, err := readFile.Stat()
+	if err != nil {
+		return "", err
+	}
+
+	size := fileInfo.Size()
+
+	doc, err := docx.Parse(readFile, size)
+	if err != nil {
+		return "", err
+	}
+
+	res := ""
+
+	for _, it := range doc.Document.Body.Items {
+		switch it.(type) {
+		case *docx.Paragraph, *docx.Table:
+			res += fmt.Sprintf("%s", it)
+		}
+	}
+
+	readFile.Close()
+
+	return res, nil
 }
 
 func convertRTFToDOCX(inputPath, outputPath string) error {
-	cmd := exec.Command("libreoffice",
+	cmd := exec.Command("soffice.exe",
 		"--headless",
 		"--convert-to",
 		"docx",

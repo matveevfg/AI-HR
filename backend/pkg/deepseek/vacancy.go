@@ -5,18 +5,18 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/go-deepseek/deepseek/request"
-	"github.com/sashabaranov/go-openai"
-
 	"github.com/matveevfg/AI-HR/backend/models"
+	"github.com/sashabaranov/go-openai"
 )
 
-func (s *Service) ResumeToJSON(ctx context.Context, resumeText string) (*models.Resume, error) {
+func (s *Service) VacancyToJSON(ctx context.Context, vacancyText string) (*models.Vacancy, error) {
 	var msgs []*request.Message
 	msgs = append(msgs, &request.Message{
 		Role:    openai.ChatMessageRoleUser,
-		Content: fmt.Sprintf(resumeToJSONPrompt, resumeText),
+		Content: fmt.Sprintf(vacancyToJSONPrompt, vacancyText),
 	})
 
 	resp, err := s.createChatCompletion(ctx, maxTokens, msgs)
@@ -28,10 +28,17 @@ func (s *Service) ResumeToJSON(ctx context.Context, resumeText string) (*models.
 		return nil, errors.New("response is empty")
 	}
 
-	var resume models.Resume
-	if err := json.Unmarshal([]byte(clearJSON(resp.Choices[0].Message.Content)), &resume); err != nil {
+	var vacancy models.Vacancy
+	if err := json.Unmarshal([]byte(clearJSON(resp.Choices[0].Message.Content)), &vacancy); err != nil {
 		return nil, err
 	}
 
-	return &resume, nil
+	return &vacancy, nil
+}
+
+func clearJSON(msg string) string {
+	msg = strings.Replace(msg, "```json", "", -1)
+	msg = strings.Replace(msg, "```", "", -1)
+
+	return msg
 }
