@@ -117,3 +117,12 @@ func (p *Postgres) SetVacancyActive(ctx context.Context, id uuid.UUID) error {
 
 	return nil
 }
+
+func (p *Postgres) SavePlan(ctx context.Context, plan *models.Plan) error {
+	_, err := p.d.NewInsert().Model(plan).Ignore().Exec(ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

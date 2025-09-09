@@ -17,6 +17,8 @@ type storage interface {
 	SetVacancyInactive(ctx context.Context, id uuid.UUID) error
 	SetVacancyActive(ctx context.Context, id uuid.UUID) error
 
+	SavePlan(ctx context.Context, plan *models.Plan) error
+
 	SaveResume(ctx context.Context, resume *models.Resume) error
 	SaveWorkPlaces(ctx context.Context, workPlaces []*models.WorkPlace) error
 	Resumes(ctx context.Context, vacancyID uuid.UUID) ([]*models.Resume, error)
@@ -28,6 +30,8 @@ type storage interface {
 
 type llmClient interface {
 	ResumeToJSON(ctx context.Context, resumeText string) (*models.Resume, error)
+	VacancyToJSON(ctx context.Context, vacancyText string) (*models.Vacancy, error)
+	VacancyInterviewPlan(ctx context.Context, vacancy string) (string, error)
 }
 
 type transcriptionClient interface {
