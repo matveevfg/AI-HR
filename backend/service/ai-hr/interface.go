@@ -29,3 +29,6 @@ type storage interface {
 type llmClient interface {
 	ResumeToJSON(ctx context.Context, resumeText string) (*models.Resume, error)
 }
+
+type transcriptionClient interface {
+}

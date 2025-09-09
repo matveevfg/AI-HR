@@ -49,7 +49,16 @@ func main() {
 		logger.Fatal().Err(err).Msg("failed to init llm")
 	}
 
-	mainService := aiHr.New(storage, llmService)
+	//transcriptionService := transcription.NewClient(conf.Transcription.Addr)
+	//if err := transcriptionService.Connect(context.Background()); err != nil {
+	//	logger.Fatal().Err(err).Msg("failed to connect to transcription")
+	//}
+
+	//defer func() {
+	//	_ = transcriptionService.Close()
+	//}()
+
+	mainService := aiHr.New(storage, llmService, nil)
 
 	server := api.New(mainService)
 
@@ -113,4 +122,7 @@ type config struct {
 	LLM struct {
 		Token string `yaml:"token"`
 	} `yaml:"llm"`
+	Transcription struct {
+		Addr string `yaml:"addr"`
+	} `yaml:"transcription"`
 }
